@@ -7,7 +7,7 @@ export const Card = styled('div', {
     height: '50px',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3A7689',
+    backgroundColor: 'rgb(0, 211, 214)',
     borderRadius: 5,
     padding: 10
 });
