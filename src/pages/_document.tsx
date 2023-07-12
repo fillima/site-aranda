@@ -10,6 +10,7 @@ export default function Document() {
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 
                 <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                <script async src="https://js.stripe.com/v3/buy-button.js"></script>
                 <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssText }} />
             </Head>
             <body>

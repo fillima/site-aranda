@@ -11,14 +11,14 @@ export const Container = styled('div', {
 export const MagazineContext = styled('div', {
     display: 'flex',
     flexDirection: 'row',
-    width: '80%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 30,
+    padding: '2%',
+    gap: '20px',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
 
     '@media(max-width: 1000px)': {
-        flexDirection: "column",
-        width: '100%'
+        flexDirection: 'column',
+        alignItems: 'center'
     }
 })
 
