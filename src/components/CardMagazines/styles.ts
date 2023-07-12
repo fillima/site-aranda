@@ -9,13 +9,17 @@ export const Card = styled('div', {
     alignItems: 'center',
     backgroundColor: 'rgb(0, 211, 214)',
     borderRadius: 5,
-    padding: 10
+    padding: 10,
+
+    '@media(max-width: 1000px)': {
+        width: '80%',
+        marginBottom: 20
+    }
 });
 
 export const Title = styled('p', {
     textAlign: "center",
     fontSize: 18,
     width: "90%",
-    color: 'white'
 });
 
