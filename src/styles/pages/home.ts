@@ -14,7 +14,12 @@ export const MagazineContext = styled('div', {
     width: '80%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 30
+    marginTop: 30,
+
+    '@media(max-width: 1000px)': {
+        flexDirection: "column",
+        width: '100%'
+    }
 })
 
 export const Title = styled('p', {

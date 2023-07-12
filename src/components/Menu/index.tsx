@@ -5,7 +5,6 @@ export default function Menu() {
     return(
         <Container>
             <Empresa><Link href="/">Aranda</Link></Empresa>
-            <p>Gerador de vendas</p>
         </Container>
     );
 }

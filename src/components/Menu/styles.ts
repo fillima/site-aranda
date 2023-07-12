@@ -7,11 +7,10 @@ export const Container = styled('div', {
     flexDirection: "row",
     backgroundColor: "#F8F8F8",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     paddingTop: 15,
     paddingBottom: 15,
-    paddingLeft: 100,
-    paddingRight: 100,
+    paddingLeft: 20,
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 
     'a': {
