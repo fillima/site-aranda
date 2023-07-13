@@ -14,5 +14,5 @@ export const globalStyles = globalCss({
     'a': {
         textDecoration: "none",
         color: "black"
-    }
+    },
 })

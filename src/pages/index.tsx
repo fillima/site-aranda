@@ -23,71 +23,44 @@ const styles = {
 export default function Home() {
 
     return(
-        <div>
-            <Menu />
-            <Container>
-                <Title>Gerador de vendas</Title>
-                <MagazineContext>
-                    <Link href="/revistas/pi">
-                        <Image
-                            src={pi}
-                            style={styles.image}
-                            alt="Plástico Industrial"
-                        />
-                    </Link>
-                    <Link href="/revistas/em">
-                        <Image
-                            src={em}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                    <Link href="/revistas/fv">
-                        <Image
-                            src={fv}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                    <Link href="/revistas/rti">
-                        <Image
-                            src={rti}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                </MagazineContext>
-                <MagazineContext>
-                    <Link href="/revistas/ccm">
-                        <Image
-                            src={ccm}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                    <Link href="/revistas/mm">
-                        <Image
-                            src={mm}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                    <Link href="/revistas/hy">
-                        <Image
-                            src={hy}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                    <Link href="/revistas/fs">
-                        <Image
-                            src={fs}
-                            style={styles.image}
-                            alt="Corte e Conformação de Metais"
-                        />
-                    </Link>
-                </MagazineContext>
-            </Container>
+    <div className="bg-white">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+            <p className="text-center text-base font-semibold uppercase text-gray-600 tracking-wider">
+            Gerador de vendas Aranda
+            </p>
+            <div className="mt-6 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-8">
+                <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    <Image
+                    className="max-h-12"
+                    src={pi}
+                    alt="Workcation"
+                    />
+                </div>
+                <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    <Image className="max-h-12" src={em} alt="Mirage" />
+                </div>
+                <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    <Image className="max-h-12" src={fv} alt="Tuple" />
+                </div>
+                <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    <Image className="max-h-12" src={rti} alt="Laravel" />
+                </div>
+                <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    <Image
+                    className="max-h-12"
+                    src={mm}
+                    alt="StaticKit"
+                    />
+                </div>
+                <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    <Image
+                    className="max-h-12"
+                    src={ccm}
+                    alt="Statamic"
+                    />
+                </div>
+            </div>
         </div>
+    </div>
     )
 }
