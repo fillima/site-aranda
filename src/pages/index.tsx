@@ -2,6 +2,7 @@ import Menu from "@/components/Menu";
 import { Container, MagazineContext, Title } from "@/styles/pages/home";
 import CardMagazine from "@/components/CardMagazines";
 import Image from "next/image";
+import Link from "next/link";
 
 import ccm from '@/assets/ccm.jpg';
 import em from '@/assets/em.jpg';
@@ -27,64 +28,64 @@ export default function Home() {
             <Container>
                 <Title>Gerador de vendas</Title>
                 <MagazineContext>
-                    <a href="/revistas/pi">
+                    <Link href="/revistas/pi">
                         <Image
                             src={pi}
                             style={styles.image}
                             alt="Plástico Industrial"
                         />
-                    </a>
-                    <a href="/revistas/em">
+                    </Link>
+                    <Link href="/revistas/em">
                         <Image
                             src={em}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
-                    <a href="/revistas/fv">
+                    </Link>
+                    <Link href="/revistas/fv">
                         <Image
                             src={fv}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
-                    <a href="/revistas/rti">
+                    </Link>
+                    <Link href="/revistas/rti">
                         <Image
                             src={rti}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
+                    </Link>
                 </MagazineContext>
                 <MagazineContext>
-                    <a href="/revistas/ccm">
+                    <Link href="/revistas/ccm">
                         <Image
                             src={ccm}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
-                    <a href="/revistas/mm">
+                    </Link>
+                    <Link href="/revistas/mm">
                         <Image
                             src={mm}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
-                    <a href="/revistas/hy">
+                    </Link>
+                    <Link href="/revistas/hy">
                         <Image
                             src={hy}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
-                    <a href="/revistas/fs">
+                    </Link>
+                    <Link href="/revistas/fs">
                         <Image
                             src={fs}
                             style={styles.image}
                             alt="Corte e Conformação de Metais"
                         />
-                    </a>
+                    </Link>
                 </MagazineContext>
             </Container>
         </div>
