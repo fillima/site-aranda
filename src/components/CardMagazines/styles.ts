@@ -7,7 +7,6 @@ export const Card = styled('div', {
     height: '50px',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgb(0, 211, 214)',
     borderRadius: 5,
     padding: 10,
 
@@ -22,4 +21,3 @@ export const Title = styled('p', {
     fontSize: 18,
     width: "90%",
 });
-

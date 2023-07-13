@@ -1,14 +1,24 @@
 import { Card, Title } from "./styles";
 
-export type Props = {
-    magazine: string,
-    link: string
+const styles = {
+    image: {
+        width: "90%",
+        height: "auto"
+    }
 }
 
-export default function CardMagazine({magazine, link}: Props) {
+export type Props = {
+    magazine: string,
+    link: string,
+    image: string
+}
+
+export default function CardMagazine({magazine, link, image}: Props) {
     return(
         <Card>
-            <Title><a href={link}>{magazine}</a></Title>
+            <a href={link}>
+                
+            </a>
         </Card>
     );
 }
