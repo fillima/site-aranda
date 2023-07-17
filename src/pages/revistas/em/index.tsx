@@ -2,6 +2,7 @@ import * as React from 'react';
 import Stripe from 'stripe';
 import { GetStaticProps } from 'next';
 import Image from "next/image";
+import Link from 'next/link';
 
 import logoAranda from '@/assets/aranda-logo.png';
 
@@ -69,9 +70,9 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
         <div className="bg-white">
             <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <a href="/" className="flex items-center px-5">
+                    <Link href="/" className="flex items-center px-5">
                         <Image src={logoAranda} className="w-10 h-8" alt="Aranda Logo" />
-                    </a>
+                    </Link>
                 </div>
             </nav>
           <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">

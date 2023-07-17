@@ -24,9 +24,9 @@ export default function Home() {
         <div className="bg-white">
            <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <a href="/" className="flex items-center px-5">
+                    <Link href="/" className="flex items-center px-5">
                         <Image src={logoAranda} className="w-10 h-8" alt="Aranda Logo" />
-                    </a>
+                    </Link>
                 </div>
             </nav>
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
