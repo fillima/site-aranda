@@ -1,15 +1,4 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
 
-module.exports = {
-    reactStrictMode: true,
-    env: {
-        stripeKey: process.env.STRIPE_KEY,
-    },
-    theme: {
-        extend: {
-            fontFamily: {
-            sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-            },
-        },
-    },
-}
+module.exports = nextConfig

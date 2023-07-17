@@ -1,23 +1,20 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme')
-const plugin = require('tailwindcss/plugin')
+const { join } = require('path');
 
 module.exports = {
-  purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
-  darkMode: false,
+  content: [
+    join(__dirname, 'src/pages/**/*.{js,ts,jsx,tsx}'),
+    join(__dirname, 'src/components/**/*.{js,ts,jsx,tsx}'),
+  ],
   theme: {
     extend: {
       colors: {
         blue: '#082f49',
-        secondary: '#00FF00',
       },
       fontFamily: {
-        sans: ['Roboto', 'Arial', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [],
 }
