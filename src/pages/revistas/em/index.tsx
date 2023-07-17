@@ -10,6 +10,17 @@ const stripe = new Stripe(stripeConfig.secretKey, {
     apiVersion: '2022-11-15',
 });
 
+interface ProductProps {
+    produtos: Array<{
+        id: string;
+        nome: string;
+        descricao: string;
+        imagem: string;
+        preco: number;
+        moeda: string;
+    }>;
+}
+
 export const getStaticProps: GetStaticProps = async () => {
     const produtos = await stripe.products.list();
 
@@ -51,7 +62,7 @@ export const getStaticProps: GetStaticProps = async () => {
     };
 }
 
-const Product = ({ produtos }) => {
+const Product: React.FC<ProductProps> = ({ produtos }) => {
     return(
         <div className="bg-white">
         <div className='shadow-lg'>
