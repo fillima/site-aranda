@@ -2,14 +2,14 @@ import Menu from "@/components/Menu";
 import Image from "next/image";
 import Link from "next/link";
 
-import ccm from '@/assets/ccm.jpg';
-import em from '@/assets/em.jpg';
-import fv from '@/assets/fotovolt.jpg';
+import ccm from '@/assets/ccm.png';
+import em from '@/assets/em.png';
+import fv from '@/assets/fotovolt.png';
 import fs from '@/assets/fs.jpg';
-import mm from '@/assets/mm.jpg';
-import pi from '@/assets/pi.jpg';
-import rti from '@/assets/rti.jpg';
-import hy from '@/assets/hy.jpg';
+import mm from '@/assets/mm.png';
+import pi from '@/assets/pi.png';
+import rti from '@/assets/rti.png';
+import hy from '@/assets/hy.png';
 
 const styles = {
     image: {
@@ -25,7 +25,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
               <div>
-                <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
                   Vendas Aranda
                 </h2>
                 <p className="mt-3 max-w-3xl text-lg text-gray-500">
@@ -33,9 +33,9 @@ export default function Home() {
                   Gera uma página de checkout para qualquer uma das revistas ao lado.
                 </p>
               </div>
-              <div className="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 lg:grid-cols-2">
+              <div className="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 shadow-lg lg:grid-cols-2">
                 <Link href="/revistas/fv">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
                         src={fv}
@@ -45,17 +45,17 @@ export default function Home() {
                     </div>
                 </Link>
                 <Link href="/revistas/pi">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image className="max-h-12 rounded" src={pi} alt="Mirage" style={styles.image}/>
                     </div>
                 </Link>
                 <Link href="/revistas/em">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image className="max-h-12 rounded" src={em} alt="Tuple" style={styles.image}/>
                     </div>
                 </Link>
                 <Link href="/revistas/rti">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
                         src={rti}
@@ -65,7 +65,7 @@ export default function Home() {
                     </div>
                 </Link>
                 <Link href="/revistas/mm">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
                         src={mm}
@@ -75,7 +75,7 @@ export default function Home() {
                     </div>
                 </Link>
                 <Link href="/revistas/ccm">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
                         src={ccm}
@@ -85,7 +85,7 @@ export default function Home() {
                     </div>
                 </Link>
                 <Link href="/revistas/fs">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
                         src={fs}
@@ -95,7 +95,7 @@ export default function Home() {
                     </div>
                 </Link>
                 <Link href="/revistas/hy">
-                    <div className="col-span-1 flex justify-center py-8 px-8 bg-blue rounded-md">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
                         src={hy}
