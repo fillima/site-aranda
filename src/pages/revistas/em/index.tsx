@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Stripe from 'stripe';
-import Menu from '@/components/Menu';
 import { GetStaticProps } from 'next';
+import Image from "next/image";
+
+import logoAranda from '@/assets/aranda-logo.png';
 
 import stripeConfig from '../../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
@@ -65,9 +67,13 @@ export const getStaticProps: GetStaticProps = async () => {
 const Product: React.FC<ProductProps> = ({ produtos }) => {
     return(
         <div className="bg-white">
-        <div className='shadow-lg'>
-          <Menu />
-        </div>
+            <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                    <a href="/" className="flex items-center px-5">
+                        <Image src={logoAranda} className="w-10 h-8" alt="Aranda Logo" />
+                    </a>
+                </div>
+            </nav>
           <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
             <div className="absolute inset-0">
                 <div className="bg-white h-1/3 sm:h-2/3" />
@@ -79,17 +85,50 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                     Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações na revista
                 </p>
                 </div>
-                <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+                <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
                 {produtos.map((produto) => (
-                    <div key={produto.id} className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 duration-200 flex flex-col rounded-lg shadow-lg overflow-hidden">
+                    <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                         <div className="flex-shrink-0">
                             <img className="h-48 w-full object-contain" src={produto.imagem} alt="" />
                         </div>
                         <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
-                            <div className="flex-1">
+                            <div className="flex flex-col flex-1 justify-between">
                                 <p className="text-xl font-semibold text-gray-200">{produto.nome}</p>
                                 <p className="mt-3 text-base text-gray-400">{produto.descricao}</p>
-                                <p className="text-xl font-semibold text-gray-200"><CurrencyFormatter amount={produto.preco / 100} /></p>
+                                <div className="flex flex-row justify-between mt-5">
+                                    <div>
+                                        <p className="text-xl font-semibold text-gray-200"><CurrencyFormatter amount={produto.preco / 100} /></p>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="quantity" className="sr-only">
+                                            Quantidade
+                                        </label>
+                                        <select
+                                            id="quantity"
+                                            name="quantity"
+                                            className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        >
+                                            <option value={1}>1</option>
+                                            <option value={2}>2</option>
+                                            <option value={3}>3</option>
+                                            <option value={4}>4</option>
+                                            <option value={5}>5</option>
+                                            <option value={6}>6</option>
+                                            <option value={7}>7</option>
+                                            <option value={8}>8</option>
+                                            <option value={9}>9</option>
+                                            <option value={10}>10</option>
+                                            <option value={11}>11</option>
+                                            <option value={12}>12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
+                                >
+                                    Gerar link de pagamento
+                                </button>
                             </div>
                         </div>
                     </div>
