@@ -1,6 +1,10 @@
 import React from 'react';
 
-const CurrencyFormatter = ({ amount }) => {
+interface CurrencyFormatterProps {
+  amount: number;
+}
+
+const CurrencyFormatter: React.FC<CurrencyFormatterProps> = ({ amount }) => {
   const formattedAmount = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
