@@ -6,10 +6,19 @@ import Link from 'next/link';
 
 import logoAranda from '@/assets/aranda-logo.png';
 
-import stripeConfig from '../../../../config/stripe';
+import stripeConfig from '../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
 import PaymentLink from '@/components/PaymentLink';
-import { useState } from 'react';
+import { useState, useContext, createContext } from 'react';
+import { useRouter } from 'next/router';
+
+const Revistas = createContext();
+
+const RevistasProvider = ({ children }) => {
+    const revistas = useContext(Revistas);
+
+    return <Revistas.Provider value={revistas}>{children}</Revistas.Provider>;
+}
 
 const stripe = new Stripe(stripeConfig.secretKey, {
     apiVersion: '2022-11-15',
@@ -27,12 +36,33 @@ interface ProductProps {
     }>;
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export async function getStaticPaths() {
+  
+    const paths = [
+      { params: { revista: 'em' } },
+      { params: { revista: 'pi' } },
+      { params: { revista: 'fv' } },
+      { params: { revista: 'hy' } },
+      { params: { revista: 'rti' } },
+      { params: { revista: 'mm' } },
+      { params: { revista: 'ccm' } },
+      { params: { revista: 'fs' } },
+    ];
+  
+    return {
+      paths,
+      fallback: false, // Ou 'blocking' se você quiser usar o modo de carregamento incremental
+    };
+  }
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+    const revistaName = params.revista;
+    
     const produtos = await stripe.products.list();
 
     // Filtrar produtos pelo metadado específico
     const metadadoChave = 'revista';
-    const metadadoValor = 'EM';
+    const metadadoValor = revistaName;
 
     const produtosFiltrados = produtos.data.filter(produto => {
       return produto.metadata[metadadoChave] === metadadoValor;
@@ -59,6 +89,7 @@ export const getStaticProps: GetStaticProps = async () => {
         imagem: produto.images,
         preco: preco.unit_amount,
         moeda: preco.currency,
+        metadata: produto.metadata,
       };
     });
 
