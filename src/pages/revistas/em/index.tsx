@@ -74,7 +74,9 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const [isLoading, setIsLoading] = useState({});
 
     const handleChange = (event) => {
-        setSelectValue(parseInt(event.target.value, 10)); // Converter o valor para um número inteiro
+        const value = event.target.value;
+        setSelectValue(value);
+        console.log(event.target);
     };
 
     const handleClickButton = (produtoId) => {
@@ -100,7 +102,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                     </Link>
                 </div>
             </nav>
-          <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">
+          <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-10 lg:pb-28 lg:px-8">
             <div className="absolute inset-0">
                 <div className="bg-white h-1/3 sm:h-2/3" />
             </div>
@@ -125,29 +127,29 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                     <div>
                                         <p className="text-xl font-semibold text-gray-200"><CurrencyFormatter amount={produto.preco / 100} /></p>
                                     </div>
-                                    <div>
-                                        <label htmlFor="quantity" className="sr-only">
-                                            Quantidade
+                                    <div key={produto.id}>
+                                        <label htmlFor="quantity" className="text-white mr-1">
+                                            Qtd.
                                         </label>
                                         <select
-                                            id="quantity"
-                                            name="quantity"
+                                            id={`select-${produto.idPrice}`}
+                                            name={produto.idPrice}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             value={selectValue}
                                             onChange={handleChange}
                                         >
-                                            <option value={1}>1</option>
-                                            <option value={2}>2</option>
-                                            <option value={3}>3</option>
-                                            <option value={4}>4</option>
-                                            <option value={5}>5</option>
-                                            <option value={6}>6</option>
-                                            <option value={7}>7</option>
-                                            <option value={8}>8</option>
-                                            <option value={9}>9</option>
-                                            <option value={10}>10</option>
-                                            <option value={11}>11</option>
-                                            <option value={12}>12</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
                                         </select>
                                     </div>
                                 </div>
