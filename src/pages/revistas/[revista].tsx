@@ -33,6 +33,8 @@ interface ProductProps {
         imagem: string;
         preco: number;
         moeda: string;
+        metadata: Array<string>;
+        revistaName: string;
     }>;
 }
 
@@ -90,6 +92,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         preco: preco.unit_amount,
         moeda: preco.currency,
         metadata: produto.metadata,
+        revistaName: revistaName
       };
     });
 
@@ -103,6 +106,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 const Product: React.FC<ProductProps> = ({ produtos }) => {
     const [selectValue, setSelectValue] = useState(1); // Valor padrão inicial
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
+
+    const revista = produtos[0].revistaName.toUpperCase();
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
@@ -139,7 +144,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             </div>
             <div className="relative max-w-7xl mx-auto">
                 <div className="text-center">
-                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos - EM</h2>
+                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos - {revista}</h2>
                 <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
                     Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações na revista
                 </p>
