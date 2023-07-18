@@ -70,12 +70,12 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
-    const [selectValue, setSelectValue] = useState(''); // Valor padrão inicial
+    const [selectValue, setSelectValue] = useState(1); // Valor padrão inicial
     const [isLoading, setIsLoading] = useState({});
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
-        setSelectValue(value);
+        setSelectValue(parseInt(value, 10));
         console.log(event.target);
     };
 
@@ -132,8 +132,8 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             Qtd.
                                         </label>
                                         <select
-                                            id={`select-${produto.idPrice}`}
-                                            name={produto.idPrice}
+                                            id={`select-${produto.id}`}
+                                            name={produto.id}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             value={selectValue}
                                             onChange={handleChange}
