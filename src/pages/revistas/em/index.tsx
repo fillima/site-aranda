@@ -79,7 +79,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
         console.log(event.target);
     };
 
-    const handleClickButton = (produtoId) => {
+    const handleClickButton = (produtoId: string) => {
         setIsLoading((prevLoading) => ({
             ...prevLoading,
             [produtoId]: true,
