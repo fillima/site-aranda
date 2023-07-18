@@ -8,6 +8,8 @@ import logoAranda from '@/assets/aranda-logo.png';
 
 import stripeConfig from '../../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
+import PaymentLink from '@/components/PaymentLink';
+import { useState } from 'react';
 
 const stripe = new Stripe(stripeConfig.secretKey, {
     apiVersion: '2022-11-15',
@@ -16,6 +18,7 @@ const stripe = new Stripe(stripeConfig.secretKey, {
 interface ProductProps {
     produtos: Array<{
         id: string;
+        idPrice: string;
         nome: string;
         descricao: string;
         imagem: string;
@@ -50,6 +53,7 @@ export const getStaticProps: GetStaticProps = async () => {
       const preco = precos[index];
       return {
         id: produto.id,
+        idPrice: preco.id,
         nome: produto.name,
         descricao: produto.description,
         imagem: produto.images,
@@ -66,6 +70,27 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
+    const [selectValue, setSelectValue] = useState(1); // Valor padrão inicial
+    const [isLoading, setIsLoading] = useState({});
+
+    const handleChange = (event) => {
+        setSelectValue(parseInt(event.target.value, 10)); // Converter o valor para um número inteiro
+    };
+
+    const handleClickButton = (produtoId) => {
+        setIsLoading((prevLoading) => ({
+            ...prevLoading,
+            [produtoId]: true,
+          }));
+
+        setTimeout(() => {
+            setIsLoading((prevLoading) => ({
+                ...prevLoading,
+                [produtoId]: false,
+              }));
+        }, 4000);
+    };
+
     return(
         <div className="bg-white">
             <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
@@ -108,6 +133,8 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             id="quantity"
                                             name="quantity"
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            value={selectValue}
+                                            onChange={handleChange}
                                         >
                                             <option value={1}>1</option>
                                             <option value={2}>2</option>
@@ -127,8 +154,17 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                 <button
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
+                                    onClick={() => {PaymentLink({quantidade: selectValue, precoId: produto.idPrice}); handleClickButton(produto.id)}}
                                 >
-                                    Gerar link de pagamento
+                                    {isLoading[produto.id] ? (
+                                    <>
+                                        <svg className="animate-spin inline-block w-5 h-5 mr-2 border-[3px] border-current border-t-transparent text-gray-700 rounded-full" viewBox="0 0 24 24">
+                                        </svg>
+                                        Gerando link...
+                                    </>
+                                    ) : (
+                                    'Gerar link de pagamento'
+                                    )}
                                 </button>
                             </div>
                         </div>
