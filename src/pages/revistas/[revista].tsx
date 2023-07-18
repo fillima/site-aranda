@@ -104,15 +104,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
-    const [selectValue, setSelectValue] = useState(1); // Valor padrão inicial
+    const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
     const revista = produtos[0].revistaName.toUpperCase();
 
-    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = event.target.value;
-        setSelectValue(parseInt(value, 10));
-        console.log(event.target);
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
+        const value = parseInt(event.target.value, 10);
+        setSelectValues((prevValues) => {
+            const updatedValues = [...prevValues];
+            updatedValues[index] = value;
+            return updatedValues;
+        });
     };
 
     const handleClickButton = (produtoId: string) => {
@@ -150,7 +153,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                 </p>
                 </div>
                 <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
-                {produtos.map((produto) => (
+                {produtos.map((produto, index) => (
                     <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                         <div className="flex-shrink-0">
                             <img className="h-48 w-full object-contain" src={produto.imagem} alt="" />
@@ -171,8 +174,8 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             id={`select-${produto.id}`}
                                             name={produto.id}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                            value={selectValue}
-                                            onChange={handleChange}
+                                            value={selectValues[index] || ''}
+                                            onChange={(event) => handleChange(event, index)}
                                         >
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -192,7 +195,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                 <button
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                    onClick={() => {PaymentLink({quantidade: selectValue, precoId: produto.idPrice}); handleClickButton(produto.id)}}
+                                    onClick={() => {PaymentLink({quantidade: selectValues[index], precoId: produto.idPrice}); handleClickButton(produto.id)}}
                                 >
                                     {isLoading[produto.id] ? (
                                     <>
