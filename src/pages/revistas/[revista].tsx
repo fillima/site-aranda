@@ -12,7 +12,7 @@ import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext } from 'react';
 import { useRouter } from 'next/router';
 
-const Revistas = createContext();
+const Revistas = createContext([]);
 
 const RevistasProvider = ({ children }) => {
     const revistas = useContext(Revistas);
