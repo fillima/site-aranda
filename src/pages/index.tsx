@@ -1,4 +1,3 @@
-import Menu from "@/components/Menu";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -29,7 +28,7 @@ export default function Home() {
                     </Link>
                 </div>
             </nav>
-          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-10 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
               <div>
                 <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
