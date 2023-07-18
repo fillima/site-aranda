@@ -70,10 +70,10 @@ export const getStaticProps: GetStaticProps = async () => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
-    const [selectValue, setSelectValue] = useState(1); // Valor padrão inicial
+    const [selectValue, setSelectValue] = useState(''); // Valor padrão inicial
     const [isLoading, setIsLoading] = useState({});
 
-    const handleChange = (event) => {
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         setSelectValue(value);
         console.log(event.target);
