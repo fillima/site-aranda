@@ -56,7 +56,7 @@ export async function getStaticPaths() {
   }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-    const revistaName = params.revista;
+    const revistaName = params?.revista;
     
     const produtos = await stripe.products.list();
 
