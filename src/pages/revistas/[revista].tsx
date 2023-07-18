@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 
 const Revistas = createContext([]);
 
-const RevistasProvider = ({ children }) => {
+const RevistasProvider = ({ children }: { children: React.ReactNode }) => {
     const revistas = useContext(Revistas);
 
     return <Revistas.Provider value={revistas}>{children}</Revistas.Provider>;
