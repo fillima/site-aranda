@@ -9,8 +9,9 @@ import logoAranda from '@/assets/aranda-logo.png';
 import stripeConfig from '../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
 import PaymentLink from '@/components/PaymentLink';
-import { useState, useContext, createContext } from 'react';
+import { useState, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 const Revistas = createContext([]);
 
@@ -108,6 +109,30 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
+    const { data: session, status } = useSession();
+    const isAuthenticated = status === 'authenticated';
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+        router.push('/login'); // Redireciona para a página de login se não estiver autenticado
+        }
+    }, [isAuthenticated, router]);
+
+    if (!isAuthenticated) {
+        return (
+            <div className="flex items-center justify-center min-h-screen p-5 bg-gray-100 min-w-screen">
+
+                <div className="flex space-x-2 animate-pulse">
+                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                </div>
+
+            </div>
+        )
+    }
+
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
@@ -178,7 +203,6 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             id={`select-${produto.id}`}
                                             name={produto.id}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                            value={selectValues[index] || 1}
                                             onChange={(event) => handleChange(event, index)}
                                         >
                                             <option value="1">1</option>
