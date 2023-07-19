@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Stripe from 'stripe';
-import { GetStaticProps } from 'next';
+import { GetServerSidePropsContext, GetStaticProps } from 'next';
 import Image from "next/image";
 import Link from 'next/link';
 
@@ -10,7 +10,8 @@ import stripeConfig from '../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
 import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext } from 'react';
-import { useRouter } from 'next/router';
+import { AuthGuard } from '@/components/AuthGuard';
+import { useSession } from 'next-auth/react';
 
 const Revistas = createContext([]);
 
@@ -19,10 +20,6 @@ const RevistasProvider = ({ children }: { children: React.ReactNode }) => {
 
     return <Revistas.Provider value={revistas}>{children}</Revistas.Provider>;
 }
-
-const stripe = new Stripe(stripeConfig.secretKey, {
-    apiVersion: '2022-11-15',
-});
 
 interface ProductProps {
     produtos: Array<{
@@ -63,6 +60,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     if (!revistaName || revistaName !== 'em') {
         revistaName = 'em'
     }
+
+    const stripe = new Stripe(stripeConfig.secretKey, {
+        apiVersion: '2022-11-15',
+    });
     
     const produtos = await stripe.products.list();
 
@@ -108,6 +109,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
+    const { data: session, status } = useSession();
+    const isAuthenticated = status === 'authenticated';
+
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
