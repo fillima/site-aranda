@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Stripe from 'stripe';
-import { GetServerSidePropsContext, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 import Image from "next/image";
 import Link from 'next/link';
 
@@ -10,8 +10,7 @@ import stripeConfig from '../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
 import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext } from 'react';
-import { AuthGuard } from '@/components/AuthGuard';
-import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const Revistas = createContext([]);
 
@@ -20,6 +19,10 @@ const RevistasProvider = ({ children }: { children: React.ReactNode }) => {
 
     return <Revistas.Provider value={revistas}>{children}</Revistas.Provider>;
 }
+
+const stripe = new Stripe(stripeConfig.secretKey, {
+    apiVersion: '2022-11-15',
+});
 
 interface ProductProps {
     produtos: Array<{
@@ -60,10 +63,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     if (!revistaName || revistaName !== 'em') {
         revistaName = 'em'
     }
-
-    const stripe = new Stripe(stripeConfig.secretKey, {
-        apiVersion: '2022-11-15',
-    });
     
     const produtos = await stripe.products.list();
 
@@ -109,9 +108,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
-    const { data: session, status } = useSession();
-    const isAuthenticated = status === 'authenticated';
-
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
@@ -182,7 +178,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             id={`select-${produto.id}`}
                                             name={produto.id}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                            value={!selectValues[index] ? 1 : selectValues[index]}
+                                            value={selectValues[index] || 1}
                                             onChange={(event) => handleChange(event, index)}
                                         >
                                             <option value="1">1</option>
