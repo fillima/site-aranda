@@ -182,7 +182,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             id={`select-${produto.id}`}
                                             name={produto.id}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                            value={selectValues[index] || ''}
+                                            value={!selectValues[index] ? 1 : selectValues[index]}
                                             onChange={(event) => handleChange(event, index)}
                                         >
                                             <option value="1">1</option>
