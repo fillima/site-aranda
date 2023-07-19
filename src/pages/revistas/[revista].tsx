@@ -112,6 +112,8 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const { data: session, status } = useSession();
     const isAuthenticated = status === 'authenticated';
     const router = useRouter();
+    const [selectValues, setSelectValues] = useState<Array<number>>([]);
+    const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -132,9 +134,6 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             </div>
         )
     }
-
-    const [selectValues, setSelectValues] = useState<Array<number>>([]);
-    const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
     const revista = produtos[0].revistaName.toUpperCase();
 
