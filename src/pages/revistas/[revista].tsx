@@ -185,7 +185,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                 {produtos.map((produto, index) => (
                     <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                         <div className="flex-shrink-0">
-                            <img className="h-48 w-full object-contain" src={produto.imagem} alt="" />
+                            <Image className="h-48 w-full object-contain" src={produto.imagem} alt="" />
                         </div>
                         <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
                             <div className="flex flex-col flex-1 justify-between">
@@ -223,7 +223,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                 <button
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                    onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, precoId: produto.idPrice}); handleClickButton(produto.id)}}
+                                    onClick={() => {PaymentLink({quantidade: selectValues[index], precoId: produto.idPrice}); handleClickButton(produto.id)}}
                                 >
                                     {isLoading[produto.id] ? (
                                     <>
