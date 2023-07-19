@@ -109,19 +109,18 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
-    const { data: session, status } = useSession();
-    const isAuthenticated = status === 'authenticated';
+    const { data: session } = useSession();
     const router = useRouter();
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
-        if (!isAuthenticated) {
-        router.push('/login'); // Redireciona para a página de login se não estiver autenticado
+        if (!session) {
+            router.push('/login'); // Redireciona para a página de login se não estiver autenticado
         }
-    }, [isAuthenticated, router]);
+    }, [session, router]);
 
-    if (!isAuthenticated) {
+    if (!session) {
         return (
             <div className="flex items-center justify-center min-h-screen p-5 bg-gray-100 min-w-screen">
 

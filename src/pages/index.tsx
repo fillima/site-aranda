@@ -12,6 +12,9 @@ import hy from '@/assets/hy.png';
 import logoAranda from '@/assets/aranda-logo.png';
 import { AuthGuard } from "@/components/AuthGuard";
 import { GetServerSidePropsContext } from "next";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const styles = {
     image: {
@@ -20,11 +23,30 @@ const styles = {
     }
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    return AuthGuard();
-}
-
 function Home() {
+    const router = useRouter();
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        if (!session) {
+            router.push('/login'); // Redireciona para a página de login se não estiver autenticado
+        }
+    }, [session, router]);
+
+    if (!session) {
+        return (
+            <div className="flex items-center justify-center min-h-screen p-5 bg-gray-100 min-w-screen">
+
+                <div className="flex space-x-2 animate-pulse">
+                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                </div>
+
+            </div>
+        )
+    }
+
     return (
     <div className="bg-white">
         <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
