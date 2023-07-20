@@ -60,7 +60,7 @@ export default function MenuAranda() {
                                     )}
                                     onClick={handleLogout}
                                 >
-                                    Sign out
+                                    Sair
                                 </button>
                                 )}
                             </Menu.Item>
