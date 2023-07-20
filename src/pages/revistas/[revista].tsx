@@ -12,6 +12,7 @@ import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import MenuAranda from '@/components/Menu';
 
 const Revistas = createContext([]);
 
@@ -171,13 +172,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
 
     return(
         <div className="bg-white">
-            <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <Link href="/" className="flex items-center px-5">
-                        <Image src={logoAranda} className="w-10 h-8" alt="Aranda Logo" />
-                    </Link>
-                </div>
-            </nav>
+            <MenuAranda />
           <div className="relative bg-gray-50 pt-16 pb-20 px-4 sm:px-6 lg:pt-10 lg:pb-28 lg:px-8">
             <div className="absolute inset-0">
                 <div className="bg-white h-1/3 sm:h-2/3" />

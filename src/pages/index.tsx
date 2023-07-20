@@ -9,10 +9,10 @@ import mm from '@/assets/mm.png';
 import pi from '@/assets/pi.png';
 import rti from '@/assets/rti.png';
 import hy from '@/assets/hy.png';
-import logoAranda from '@/assets/aranda-logo.png';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import MenuAranda from "@/components/Menu";
 
 const styles = {
     image: {
@@ -47,13 +47,7 @@ function Home() {
 
     return (
     <div className="bg-white">
-        <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <Link href="/" className="flex items-center px-5">
-                        <Image src={logoAranda} className="w-10 h-8" alt="Aranda Logo" />
-                    </Link>
-                </div>
-            </nav>
+        <MenuAranda />
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-10 lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
