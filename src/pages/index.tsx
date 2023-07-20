@@ -60,19 +60,14 @@ function Home() {
                 </p>
             </div>
             <div className="mt-8 grid grid-cols-2 gap-0.5 md:grid-cols-3 lg:mt-0 shadow-lg lg:grid-cols-2">
-                <Link href="/revistas/fv">
+                <Link href="/revistas/ccm">
                     <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
-                        src={fv}
-                        alt="Fotovolt"
+                        src={ccm}
+                        alt="Statamic"
                         style={styles.image}
                     />
-                    </div>
-                </Link>
-                <Link href="/revistas/pi">
-                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
-                    <Image className="max-h-12 rounded" src={pi} alt="Mirage" style={styles.image}/>
                     </div>
                 </Link>
                 <Link href="/revistas/em">
@@ -80,32 +75,12 @@ function Home() {
                     <Image className="max-h-12 rounded" src={em} alt="Tuple" style={styles.image}/>
                     </div>
                 </Link>
-                <Link href="/revistas/rti">
+                <Link href="/revistas/fv">
                     <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
                     <Image
                         className="max-h-12 rounded"
-                        src={rti}
-                        alt="Laravel"
-                        style={styles.image}
-                    />
-                    </div>
-                </Link>
-                <Link href="/revistas/mm">
-                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
-                    <Image
-                        className="max-h-12 rounded"
-                        src={mm}
-                        alt="StaticKit"
-                        style={styles.image}
-                    />
-                    </div>
-                </Link>
-                <Link href="/revistas/ccm">
-                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
-                    <Image
-                        className="max-h-12 rounded"
-                        src={ccm}
-                        alt="Statamic"
+                        src={fv}
+                        alt="Fotovolt"
                         style={styles.image}
                     />
                     </div>
@@ -126,6 +101,31 @@ function Home() {
                         className="max-h-12 rounded"
                         src={hy}
                         alt="Statamic"
+                        style={styles.image}
+                    />
+                    </div>
+                </Link>
+                <Link href="/revistas/mm">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
+                    <Image
+                        className="max-h-12 rounded"
+                        src={mm}
+                        alt="StaticKit"
+                        style={styles.image}
+                    />
+                    </div>
+                </Link>
+                <Link href="/revistas/pi">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
+                    <Image className="max-h-12 rounded" src={pi} alt="Mirage" style={styles.image}/>
+                    </div>
+                </Link>
+                <Link href="/revistas/rti">
+                    <div className="transition ease-in-out delay-50 hover:-translate-y-1 hover:scale-105 hover:bg-gray-400 duration-200 col-span-1 flex justify-center py-8 px-8 bg-gray-300 rounded-md">
+                    <Image
+                        className="max-h-12 rounded"
+                        src={rti}
+                        alt="Laravel"
                         style={styles.image}
                     />
                     </div>
