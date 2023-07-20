@@ -141,8 +141,6 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
         }, 4000);
     };
 
-    console.log(session);
-
     useEffect(() => {
         // Se a sessão ainda está carregando, não fazemos nada
         if (status === 'loading') {

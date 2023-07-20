@@ -15,8 +15,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const products = await stripe.products.list();
 
-  console.log(products.data);
-
   return{
     paths: [],
     fallback: false,
