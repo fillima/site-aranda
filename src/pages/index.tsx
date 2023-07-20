@@ -10,8 +10,6 @@ import pi from '@/assets/pi.png';
 import rti from '@/assets/rti.png';
 import hy from '@/assets/hy.png';
 import logoAranda from '@/assets/aranda-logo.png';
-import { AuthGuard } from "@/components/AuthGuard";
-import { GetServerSidePropsContext } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
