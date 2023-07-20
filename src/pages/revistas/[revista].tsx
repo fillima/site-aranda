@@ -109,31 +109,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 }
 
 const Product: React.FC<ProductProps> = ({ produtos }) => {
-    const { data: session, status } = useSession();
-    const isAuthenticated = status === 'authenticated';
     const router = useRouter();
+    const { data: session, status } = useSession();
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
-
-    useEffect(() => {
-        if (!isAuthenticated) {
-        router.push('/login'); // Redireciona para a página de login se não estiver autenticado
-        }
-    }, [isAuthenticated, router]);
-
-    if (!isAuthenticated) {
-        return (
-            <div className="flex items-center justify-center min-h-screen p-5 bg-gray-100 min-w-screen">
-
-                <div className="flex space-x-2 animate-pulse">
-                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                </div>
-
-            </div>
-        )
-    }
+    const [sessionLoaded, setSessionLoaded] = useState(false);
 
     const revista = produtos[0].revistaName.toUpperCase();
 
@@ -160,6 +140,35 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
         }, 4000);
     };
 
+    console.log(session);
+
+    useEffect(() => {
+        // Se a sessão ainda está carregando, não fazemos nada
+        if (status === 'loading') {
+          return;
+        }
+    
+        // Se a sessão foi carregada e não existe, redirecionamos para a página de login
+        if (status === 'unauthenticated' || !session) {
+          router.push('/login');
+        } else {
+          // Se a sessão foi carregada e existe, marcamos a sessão como carregada
+          setSessionLoaded(true);
+        }
+    }, [status, session, router]);
+
+    if (!sessionLoaded) {
+        return (
+          <div className="flex items-center justify-center min-h-screen p-5 bg-gray-100 min-w-screen">
+            <div className="flex space-x-2 animate-pulse">
+              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+            </div>
+          </div>
+        );
+    }
+
     return(
         <div className="bg-white">
             <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
@@ -184,7 +193,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                 {produtos.map((produto, index) => (
                     <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
                         <div className="flex-shrink-0">
-                            <Image className="h-48 w-full object-contain" src={produto.imagem} alt="" />
+                            <Image src={produto.imagem[0]} className="h-48 w-full object-contain" alt="" height={48} width={80}/>
                         </div>
                         <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
                             <div className="flex flex-col flex-1 justify-between">
@@ -203,6 +212,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                             name={produto.id}
                                             className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                             onChange={(event) => handleChange(event, index)}
+                                            value={selectValues[index]}
                                         >
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -222,7 +232,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                 <button
                                     type="button"
                                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                    onClick={() => {PaymentLink({quantidade: selectValues[index], precoId: produto.idPrice}); handleClickButton(produto.id)}}
+                                    onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, precoId: produto.idPrice}); handleClickButton(produto.id)}}
                                 >
                                     {isLoading[produto.id] ? (
                                     <>

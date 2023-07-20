@@ -1,5 +1,11 @@
 import NextAuth from "next-auth"
 import GoogleProvider from 'next-auth/providers/google';
+
+interface Props {
+  url: string;
+  baseUrl: string;
+}
+
 export const authOptions = {
   providers: [
     GoogleProvider({

@@ -5,14 +5,10 @@ export async function AuthGuard() {
   const session = await getSession();
   if (!session) {
     return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
+      destination: '/login',
+      permanent: false,
     };
   }
 
-  return {
-    props: {},
-  };
+  return null;
 }
