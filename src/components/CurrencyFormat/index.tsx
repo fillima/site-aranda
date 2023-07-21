@@ -4,7 +4,7 @@ interface CurrencyFormatterProps {
   amount: number;
 }
 
-const CurrencyFormatter: React.FC<CurrencyFormatterProps> = ({ amount }) => {
+const CurrencyFormatter: React.FC<CurrencyFormatterProps> = ({ amount, price, currency }) => {
   const [inputValue, setInputValue] = useState('');
 
   const formattedAmount = new Intl.NumberFormat('pt-BR', {

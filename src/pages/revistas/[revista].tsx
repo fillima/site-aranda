@@ -112,6 +112,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
     const [sessionLoaded, setSessionLoaded] = useState(false);
+    const [inputValue, setInputValue] = useState<number>(0);
 
     const revista = produtos[0].revistaName.toUpperCase();
 
@@ -122,6 +123,10 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             updatedValues[index] = value;
             return updatedValues;
         });
+    };
+
+    const handleProductPriceChange = (price: number) => {
+      setInputValue(price);
     };
 
     const handleClickButton = (produtoId: string) => {
