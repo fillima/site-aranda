@@ -2,9 +2,6 @@ import * as React from 'react';
 import Stripe from 'stripe';
 import { GetStaticProps } from 'next';
 import Image from "next/image";
-import Link from 'next/link';
-
-import logoAranda from '@/assets/aranda-logo.png';
 
 import stripeConfig from '../../../config/stripe';
 import CurrencyFormatter from '@/components/CurrencyFormat';
@@ -184,62 +181,60 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                 </div>
                 <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
                 {produtos.map((produto, index) => (
-                    <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
-                        <div className="flex-shrink-0">
-                            <Image src={produto.imagem[0]} className="h-48 w-full object-contain" alt="" height={48} width={80}/>
-                        </div>
-                        <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
-                            <div className="flex flex-col flex-1 justify-between">
-                                <p className="text-xl font-semibold text-gray-200">{produto.nome}</p>
-                                <p className="mt-3 text-base text-gray-400">{produto.descricao}</p>
-                                <div className="flex flex-row justify-between mt-5">
-                                    <div>
-                                        <p className="text-xl font-semibold text-gray-200"><CurrencyFormatter amount={produto.preco / 100} /></p>
-                                    </div>
-                                    <div key={produto.id}>
-                                        <label htmlFor="quantity" className="text-white mr-1">
-                                            Qtd.
-                                        </label>
-                                        <select
-                                            id={`select-${produto.id}`}
-                                            name={produto.id}
-                                            className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                            onChange={(event) => handleChange(event, index)}
-                                            value={selectValues[index]}
-                                        >
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
-                                        </select>
-                                    </div>
+                  <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                      <div className="flex-shrink-0">
+                          <Image src={produto.imagem[0]} className="h-48 w-full object-contain" alt="" height={48} width={80}/>
+                      </div>
+                      <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
+                          <div className="flex flex-col flex-1 justify-between">
+                              <p className="text-xl font-semibold text-gray-200">{produto.nome}</p>
+                              <p className="mt-3 text-base text-gray-400">{produto.descricao}</p>
+                              <div className="flex flex-col justify-between mt-5">
+                                <CurrencyFormatter amount={produto.preco / 100} />
+                                <div key={produto.id} className='mt-4'>
+                                    <label htmlFor="quantity" className="text-white mr-1 ">
+                                        Qtd.
+                                    </label>
+                                    <select
+                                        id={`select-${produto.id}`}
+                                        name={produto.id}
+                                        className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        onChange={(event) => handleChange(event, index)}
+                                        value={selectValues[index]}
+                                    >
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
                                 </div>
-                                <button
-                                    type="button"
-                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                    onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, precoId: produto.idPrice}); handleClickButton(produto.id)}}
-                                >
-                                    {isLoading[produto.id] ? (
-                                    <>
-                                        <svg className="animate-spin inline-block w-5 h-5 mr-2 border-[3px] border-current border-t-transparent text-gray-700 rounded-full" viewBox="0 0 24 24">
-                                        </svg>
-                                        Gerando link...
-                                    </>
-                                    ) : (
-                                    'Gerar link de pagamento'
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                              </div>
+                              <button
+                                  type="button"
+                                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
+                                  onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, preco: 100000, moeda: 'BRL', produto: produto.id}); handleClickButton(produto.id)}}
+                              >
+                                  {isLoading[produto.id] ? (
+                                  <>
+                                      <svg className="animate-spin inline-block w-5 h-5 mr-2 border-[3px] border-current border-t-transparent text-gray-700 rounded-full" viewBox="0 0 24 24">
+                                      </svg>
+                                      Gerando link...
+                                  </>
+                                  ) : (
+                                  'Gerar link de pagamento'
+                                  )}
+                              </button>
+                          </div>
+                      </div>
+                  </div>
                 ))}
                 </div>
             </div>
