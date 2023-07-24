@@ -4,7 +4,7 @@ import { GetStaticProps } from 'next';
 import Image from "next/image";
 
 import stripeConfig from '../../../config/stripe';
-import CurrencyFormatter from '@/components/CurrencyFormat';
+import { CurrencyInput } from 'react-currency-mask';
 import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -112,7 +112,11 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
     const [sessionLoaded, setSessionLoaded] = useState(false);
-    const [inputValue, setInputValue] = useState<number>(0);
+    const [inputValue, setInputValue] = useState<Array<number>>([]);
+    const [maskValues, setMaskValues] = useState<Array<number>>([]);
+    const [selectCurrencyValue, setSelectCurrencyValue] = useState<Array<string>>([]);
+    const [selectLocaleValue, setSelectLocaleValue] = useState<Array<string>>([]);
+
 
     const revista = produtos[0].revistaName.toUpperCase();
 
@@ -125,8 +129,33 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
         });
     };
 
-    const handleProductPriceChange = (price: number) => {
-      setInputValue(price);
+    const handleCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
+      const value = event.target.value;
+      setSelectCurrencyValue((prevValues) => {
+        const newValues = [...prevValues];
+        newValues[index] = value;
+        return newValues
+      })
+      
+      setSelectLocaleValue((prevValues) => {
+        const newValues = [...prevValues];
+        newValues[index] = value === 'USD' ? 'en-US' : 'pt-BR';
+        return newValues
+      })
+    }
+
+    const handleProductPriceChange = (event: React.ChangeEvent<HTMLInputElement>, originalValue: string | number, maskedValue: string | number, index: number) => {
+      setInputValue((prevValues) => {
+        const priceValue = [...prevValues];
+        priceValue[index] = typeof originalValue === 'string' ? parseFloat(originalValue) : originalValue || 0;
+        return priceValue;
+      });
+      
+      setMaskValues((prevValues) => {
+        const maskValue = [...prevValues];
+        maskValue[index] = typeof maskedValue === 'string' ? parseFloat(maskedValue) : maskedValue || 0;
+        return maskValue;
+      });
     };
 
     const handleClickButton = (produtoId: string) => {
@@ -179,7 +208,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             </div>
             <div className="relative max-w-7xl mx-auto">
                 <div className="text-center">
-                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos - {revista}</h2>
+                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos</h2>
                 <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
                     Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações na revista
                 </p>
@@ -195,7 +224,32 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                               <p className="text-xl font-semibold text-gray-200">{produto.nome}</p>
                               <p className="mt-3 text-base text-gray-400">{produto.descricao}</p>
                               <div className="flex flex-col justify-between mt-5">
-                                <CurrencyFormatter amount={produto.preco / 100} />
+                                <div className='flex flex-col'>
+                                    <label className="block text-sm font-medium leading-6 text-white">Preço</label>
+                                    <div className='flex flex-row justify-between mt-2'>
+                                      <CurrencyInput 
+                                        onChangeValue={(event, originalValue, maskedValue) => handleProductPriceChange(event, originalValue, maskedValue, index)}
+                                        value={maskValues[index]}
+                                        placeholder="R$ 0,00"
+                                        className="pl-2 rounded-sm"
+                                        currency={selectCurrencyValue[index]}
+                                        locale={selectLocaleValue[index]}
+                                      />
+                                      <div className="flex">
+                                        <label className="sr-only">Moeda</label>
+                                        <select 
+                                          id="currency"
+                                          name="currency"
+                                          className="rounded-md border-0 bg-transparent text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                          onChange={(event) => handleCurrencyChange(event, index)}
+                                          value={selectCurrencyValue[index]}
+                                        >
+                                          <option value="BRL">BRL</option>
+                                          <option value="USD">USD</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                </div>
                                 <div key={produto.id} className='mt-4'>
                                     <label htmlFor="quantity" className="text-white mr-1 ">
                                         Qtd.
@@ -225,7 +279,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                               <button
                                   type="button"
                                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                  onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, preco: 100000, moeda: 'BRL', produto: produto.id}); handleClickButton(produto.id)}}
+                                  onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, preco: inputValue[index], moeda: selectCurrencyValue[index] || 'BRL', produto: produto.id}); handleClickButton(produto.id)}}
                               >
                                   {isLoading[produto.id] ? (
                                   <>
