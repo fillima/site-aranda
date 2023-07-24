@@ -242,9 +242,10 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                       <CurrencyInput 
                                         onChangeValue={handleChangeWithIndex(index)}
                                         value={maskValues[index] ? maskValues[index] : 'R$ 0,00'}
-                                        className="pl-2 rounded-sm text-gray-600"
                                         currency={selectCurrencyValue[index]}
                                         locale={selectLocaleValue[index]}
+                                        // @ts-ignore
+                                        className="text-gray-600 pl-2 rounded-sm"
                                       />
                                       <div className="flex">
                                         <label className="sr-only">Moeda</label>
