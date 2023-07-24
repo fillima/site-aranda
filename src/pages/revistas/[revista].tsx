@@ -144,7 +144,19 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
       })
     }
 
-    const handleProductPriceChange = (event: React.ChangeEvent<HTMLInputElement>, originalValue: string | number, maskedValue: string | number, index: number) => {
+    const handleChangeWithIndex = (index: number) => (
+      event: React.ChangeEvent<HTMLInputElement>,
+      originalValue: string | number,
+      maskedValue: string | number) => {
+        handleProductPriceChange(event, originalValue, maskedValue, index);
+      };
+
+    const handleProductPriceChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+      originalValue: string | number,
+      maskedValue: string | number,
+      index: number
+    ) => {
       setInputValue((prevValues) => {
         const priceValue = [...prevValues];
         priceValue[index] = typeof originalValue === 'string' ? parseFloat(originalValue) : originalValue || 0;
@@ -228,10 +240,9 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                     <label className="block text-sm font-medium leading-6 text-white">Preço</label>
                                     <div className='flex flex-row justify-between mt-2'>
                                       <CurrencyInput 
-                                        onChangeValue={(event, originalValue, maskedValue) => handleProductPriceChange(event, originalValue, maskedValue, index)}
-                                        value={maskValues[index]}
-                                        placeholder="R$ 0,00"
-                                        className="pl-2 rounded-sm"
+                                        onChangeValue={handleChangeWithIndex(index)}
+                                        value={maskValues[index] ? maskValues[index] : 'R$ 0,00'}
+                                        className="pl-2 rounded-sm text-gray-600"
                                         currency={selectCurrencyValue[index]}
                                         locale={selectLocaleValue[index]}
                                       />
