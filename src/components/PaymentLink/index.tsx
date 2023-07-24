@@ -30,6 +30,28 @@ export default async function PaymentLink({quantidade, preco, moeda, produto}: P
             price: newPrice.id,
             quantity: quantidade,
           }],
+          phone_number_collection: {
+            "enabled": true
+          },
+          billing_address_collection: "required",
+          custom_fields: [
+            {
+              key: 'cnpj',
+              label: {
+                type: "custom",
+                custom: "CNPJ",
+              },
+              type: "numeric",
+            },
+            {
+              key: 'razaosocial',
+              label: {
+                type: "custom",
+                custom: "Razão Social",
+              },
+              type: "text",
+            },
+          ],
           mode: 'payment',
           success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
           cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
