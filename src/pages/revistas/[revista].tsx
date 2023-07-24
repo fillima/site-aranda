@@ -2,12 +2,9 @@ import * as React from 'react';
 import Stripe from 'stripe';
 import { GetStaticProps } from 'next';
 import Image from "next/image";
-import Link from 'next/link';
-
-import logoAranda from '@/assets/aranda-logo.png';
 
 import stripeConfig from '../../../config/stripe';
-import CurrencyFormatter from '@/components/CurrencyFormat';
+import { CurrencyInput } from 'react-currency-mask';
 import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -115,6 +112,11 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
     const [sessionLoaded, setSessionLoaded] = useState(false);
+    const [inputValue, setInputValue] = useState<Array<number>>([]);
+    const [maskValues, setMaskValues] = useState<Array<number>>([]);
+    const [selectCurrencyValue, setSelectCurrencyValue] = useState<Array<string>>([]);
+    const [selectLocaleValue, setSelectLocaleValue] = useState<Array<string>>([]);
+
 
     const revista = produtos[0].revistaName.toUpperCase();
 
@@ -125,6 +127,47 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             updatedValues[index] = value;
             return updatedValues;
         });
+    };
+
+    const handleCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
+      const value = event.target.value;
+      setSelectCurrencyValue((prevValues) => {
+        const newValues = [...prevValues];
+        newValues[index] = value;
+        return newValues
+      })
+      
+      setSelectLocaleValue((prevValues) => {
+        const newValues = [...prevValues];
+        newValues[index] = value === 'USD' ? 'en-US' : 'pt-BR';
+        return newValues
+      })
+    }
+
+    const handleChangeWithIndex = (index: number) => (
+      event: React.ChangeEvent<HTMLInputElement>,
+      originalValue: string | number,
+      maskedValue: string | number) => {
+        handleProductPriceChange(event, originalValue, maskedValue, index);
+      };
+
+    const handleProductPriceChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+      originalValue: string | number,
+      maskedValue: string | number,
+      index: number
+    ) => {
+      setInputValue((prevValues) => {
+        const priceValue = [...prevValues];
+        priceValue[index] = typeof originalValue === 'string' ? parseFloat(originalValue) : originalValue || 0;
+        return priceValue;
+      });
+      
+      setMaskValues((prevValues) => {
+        const maskValue = [...prevValues];
+        maskValue[index] = typeof maskedValue === 'string' ? parseFloat(maskedValue) : maskedValue || 0;
+        return maskValue;
+      });
     };
 
     const handleClickButton = (produtoId: string) => {
@@ -177,69 +220,92 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             </div>
             <div className="relative max-w-7xl mx-auto">
                 <div className="text-center">
-                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos - {revista}</h2>
+                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos</h2>
                 <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
                     Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações na revista
                 </p>
                 </div>
                 <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
                 {produtos.map((produto, index) => (
-                    <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
-                        <div className="flex-shrink-0">
-                            <Image src={produto.imagem[0]} className="h-48 w-full object-contain" alt="" height={48} width={80}/>
-                        </div>
-                        <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
-                            <div className="flex flex-col flex-1 justify-between">
-                                <p className="text-xl font-semibold text-gray-200">{produto.nome}</p>
-                                <p className="mt-3 text-base text-gray-400">{produto.descricao}</p>
-                                <div className="flex flex-row justify-between mt-5">
-                                    <div>
-                                        <p className="text-xl font-semibold text-gray-200"><CurrencyFormatter amount={produto.preco / 100} /></p>
-                                    </div>
-                                    <div key={produto.id}>
-                                        <label htmlFor="quantity" className="text-white mr-1">
-                                            Qtd.
-                                        </label>
-                                        <select
-                                            id={`select-${produto.id}`}
-                                            name={produto.id}
-                                            className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                            onChange={(event) => handleChange(event, index)}
-                                            value={selectValues[index]}
+                  <div key={produto.id} className="flex flex-col rounded-lg shadow-lg overflow-hidden">
+                      <div className="flex-shrink-0">
+                          <Image src={produto.imagem[0]} className="h-48 w-full object-contain" alt="" height={48} width={80}/>
+                      </div>
+                      <div className="flex-1 bg-blue p-6 flex flex-col justify-between">
+                          <div className="flex flex-col flex-1 justify-between">
+                              <p className="text-xl font-semibold text-gray-200">{produto.nome}</p>
+                              <p className="mt-3 text-base text-gray-400">{produto.descricao}</p>
+                              <div className="flex flex-col justify-between mt-5">
+                                <div className='flex flex-col'>
+                                    <label className="block text-sm font-medium leading-6 text-white">Preço</label>
+                                    <div className='flex flex-row justify-between mt-2'>
+                                      <CurrencyInput 
+                                        onChangeValue={handleChangeWithIndex(index)}
+                                        value={maskValues[index] ? maskValues[index] : 'R$ 0,00'}
+                                        currency={selectCurrencyValue[index]}
+                                        locale={selectLocaleValue[index]}
+                                        // @ts-ignore
+                                        className="text-gray-600 pl-2 rounded-sm"
+                                      />
+                                      <div className="flex">
+                                        <label className="sr-only">Moeda</label>
+                                        <select 
+                                          id="currency"
+                                          name="currency"
+                                          className="rounded-md border-0 bg-transparent text-white focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                                          onChange={(event) => handleCurrencyChange(event, index)}
+                                          value={selectCurrencyValue[index]}
                                         >
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
-                                            <option value="6">6</option>
-                                            <option value="7">7</option>
-                                            <option value="8">8</option>
-                                            <option value="9">9</option>
-                                            <option value="10">10</option>
-                                            <option value="11">11</option>
-                                            <option value="12">12</option>
+                                          <option value="BRL">BRL</option>
+                                          <option value="USD">USD</option>
                                         </select>
+                                      </div>
                                     </div>
                                 </div>
-                                <button
-                                    type="button"
-                                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                    onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, precoId: produto.idPrice}); handleClickButton(produto.id)}}
-                                >
-                                    {isLoading[produto.id] ? (
-                                    <>
-                                        <svg className="animate-spin inline-block w-5 h-5 mr-2 border-[3px] border-current border-t-transparent text-gray-700 rounded-full" viewBox="0 0 24 24">
-                                        </svg>
-                                        Gerando link...
-                                    </>
-                                    ) : (
-                                    'Gerar link de pagamento'
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                                <div key={produto.id} className='mt-4'>
+                                    <label htmlFor="quantity" className="text-white mr-1 ">
+                                        Qtd.
+                                    </label>
+                                    <select
+                                        id={`select-${produto.id}`}
+                                        name={produto.id}
+                                        className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        onChange={(event) => handleChange(event, index)}
+                                        value={selectValues[index]}
+                                    >
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                              </div>
+                              <button
+                                  type="button"
+                                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
+                                  onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, preco: inputValue[index], moeda: selectCurrencyValue[index] || 'BRL', produto: produto.id}); handleClickButton(produto.id)}}
+                              >
+                                  {isLoading[produto.id] ? (
+                                  <>
+                                      <svg className="animate-spin inline-block w-5 h-5 mr-2 border-[3px] border-current border-t-transparent text-gray-700 rounded-full" viewBox="0 0 24 24">
+                                      </svg>
+                                      Gerando link...
+                                  </>
+                                  ) : (
+                                  'Gerar link de pagamento'
+                                  )}
+                              </button>
+                          </div>
+                      </div>
+                  </div>
                 ))}
                 </div>
             </div>
