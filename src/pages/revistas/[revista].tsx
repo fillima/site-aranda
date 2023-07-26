@@ -229,7 +229,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
             </div>
             <div className="relative max-w-7xl mx-auto">
                 <div className="text-center">
-                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos</h2>
+                <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos Aranda</h2>
                 <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
                     Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações
                 </p>
