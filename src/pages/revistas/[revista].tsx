@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import stripeConfig from '../../../config/stripe';
 import { CurrencyInput } from 'react-currency-mask';
+import CurrencyFormatter from '@/components/CurrencyFormat';
 import PaymentLink from '@/components/PaymentLink';
 import { useState, useContext, createContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -63,7 +64,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         revistaName = 'em'
     }
     
-    const produtos = await stripe.products.list();
+    const produtos = await stripe.products.list(
+      {
+        limit: 30,
+      }
+    );
 
     // Filtrar produtos pelo metadado específico
     const metadadoChave = 'revista';
@@ -74,12 +79,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     });
 
     // Obter os preços dos produtos filtrados
+    const produtosOrdenados = produtosFiltrados.reverse()
     const precos = await Promise.all(
-      produtosFiltrados.map(async produto => {
+      produtosOrdenados.map(async produto => {
         const preco = await stripe.prices.list({
           product: produto.id,
+          limit: 10000,
         });
-        return preco.data[0];
+        const precoPadrao = preco.data.reverse()
+
+        return precoPadrao[0];
       })
     );
 
@@ -222,7 +231,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                 <div className="text-center">
                 <h2 className="text-3xl tracking-tight font-semibold text-gray-900 sm:text-4xl">Produtos</h2>
                 <p className="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
-                    Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações na revista
+                    Escolha abaixo qual produto você deseja gerar um pagamento e a quantidade de veiculações
                 </p>
                 </div>
                 <div className="mt-12 max-w-lg mx-auto grid gap-5 lg:grid-cols-4 lg:max-w-none">
@@ -260,6 +269,9 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                           <option value="USD">USD</option>
                                         </select>
                                       </div>
+                                    </div>
+                                    <div>
+                                      <p className='text-gray-500 text-xs mt-1'>Valor sugerido: <CurrencyFormatter amount={produto.preco / 100}/></p>
                                     </div>
                                 </div>
                                 <div key={produto.id} className='mt-4'>
