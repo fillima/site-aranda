@@ -119,6 +119,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [selectValues, setSelectValues] = useState<Array<number>>([]);
+    const [installmentsValues, setInstallmentsValues] = useState<Array<number>>([]);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
     const [sessionLoaded, setSessionLoaded] = useState(false);
     const [inputValue, setInputValue] = useState<Array<number>>([]);
@@ -132,6 +133,15 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
         const value = parseInt(event.target.value, 10);
         setSelectValues((prevValues) => {
+            const updatedValues = [...prevValues];
+            updatedValues[index] = value;
+            return updatedValues;
+        });
+    };
+    
+    const handleInstallmentsChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
+        const value = parseInt(event.target.value, 10);
+        setInstallmentsValues((prevValues) => {
             const updatedValues = [...prevValues];
             updatedValues[index] = value;
             return updatedValues;
@@ -274,36 +284,63 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                       <p className='text-gray-500 text-xs mt-1'>Valor sugerido: <CurrencyFormatter amount={produto.preco / 100}/></p>
                                     </div>
                                 </div>
-                                <div key={produto.id} className='mt-4'>
-                                    <label htmlFor="quantity" className="text-white mr-1 ">
-                                        Qtd.
-                                    </label>
-                                    <select
-                                        id={`select-${produto.id}`}
-                                        name={produto.id}
-                                        className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                        onChange={(event) => handleChange(event, index)}
-                                        value={selectValues[index]}
-                                    >
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
+                                <div className='flex flex-row justify-between'>
+                                  <div key={produto.id} className='mt-4'>
+                                      <label htmlFor="quantity" className="text-white mr-1 ">
+                                          Qtd.
+                                      </label>
+                                      <select
+                                          id={`select-${produto.id}`}
+                                          name={produto.id}
+                                          className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                          onChange={(event) => handleChange(event, index)}
+                                          value={selectValues[index]}
+                                      >
+                                          <option value="1">1</option>
+                                          <option value="2">2</option>
+                                          <option value="3">3</option>
+                                          <option value="4">4</option>
+                                          <option value="5">5</option>
+                                          <option value="6">6</option>
+                                          <option value="7">7</option>
+                                          <option value="8">8</option>
+                                          <option value="9">9</option>
+                                          <option value="10">10</option>
+                                          <option value="11">11</option>
+                                          <option value="12">12</option>
+                                      </select>
+                                  </div>
+                                  <div key={produto.id} className='mt-4'>
+                                      <label htmlFor="installments" className="text-white mr-1 ">
+                                          Parcelas
+                                      </label>
+                                      <select
+                                          id={`installments-${produto.id}`}
+                                          name={produto.id}
+                                          className="rounded-md border border-gray-300 text-base font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                          onChange={(event) => handleInstallmentsChange(event, index)}
+                                          value={installmentsValues[index]}
+                                      >
+                                          <option value="1">1</option>
+                                          <option value="2">2</option>
+                                          <option value="3">3</option>
+                                          <option value="4">4</option>
+                                          <option value="5">5</option>
+                                          <option value="6">6</option>
+                                          <option value="7">7</option>
+                                          <option value="8">8</option>
+                                          <option value="9">9</option>
+                                          <option value="10">10</option>
+                                          <option value="11">11</option>
+                                          <option value="12">12</option>
+                                      </select>
+                                  </div>
                                 </div>
                               </div>
                               <button
                                   type="button"
                                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-gray bg-gray-300 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 mt-3 justify-center"
-                                  onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, preco: inputValue[index], moeda: selectCurrencyValue[index] || 'BRL', produto: produto.id}); handleClickButton(produto.id)}}
+                                  onClick={() => {PaymentLink({quantidade: selectValues[index] || 1, preco: inputValue[index], moeda: selectCurrencyValue[index] || 'BRL', produto: produto.id, parcelas: installmentsValues[index] || 1}); handleClickButton(produto.id)}}
                               >
                                   {isLoading[produto.id] ? (
                                   <>

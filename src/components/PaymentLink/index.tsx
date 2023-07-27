@@ -12,56 +12,165 @@ interface Props {
     preco: number,
     moeda: string,
     produto: string,
+    parcelas: number,
 }
 
-export default async function PaymentLink({quantidade, preco, moeda, produto}: Props) {
+export default async function PaymentLink({quantidade, preco, moeda, produto, parcelas}: Props) {
     try {
-        // Crie um novo preço para o produto no Stripe
-        const newPrice = await stripeApi.prices.create({
+        const existingPrices = await stripeApi.prices.list({
           product: produto,
-          unit_amount: Math.round(preco * 100), // Valor em centavos
-          currency: moeda,
+          limit: 10000, // Aumente o limite se você tiver mais de 10000 preços por produto
         });
-  
-        // Crie um objeto de pagamento com o novo preço
-        const paymentLink = await stripeApi.checkout.sessions.create({
-          payment_method_types: ['card'],
-          line_items: [{
-            price: newPrice.id,
-            quantity: quantidade,
-          }],
-          phone_number_collection: {
-            "enabled": true
-          },
-          billing_address_collection: "required",
-          custom_fields: [
-            {
-              key: 'cnpj',
-              label: {
-                type: "custom",
-                custom: "CNPJ",
-              },
-              type: "numeric",
-            },
-            {
-              key: 'razaosocial',
-              label: {
-                type: "custom",
-                custom: "Razão Social",
-              },
-              type: "text",
-            },
-          ],
-          mode: 'payment',
-          success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
-          cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
-        });
-  
-        if (paymentLink.url == null) {
-            paymentLink.url = '';
-        }
 
-        window.location.href = paymentLink.url;
+        // Caso seja parcelado, o sistema cria um pagamento recorrente
+        if (parcelas > 1) {
+          const matchingPrice = existingPrices.data.find(price => {
+            // Defina uma tolerância para comparação de preços
+            const tolerance = 0.00; // 0% de tolerância
+            const priceValue = preco * 100 / parcelas;
+            const existingPriceValue = price.unit_amount || 0;
+            const currency = moeda.toLowerCase();
+            const mathPrice = Math.abs(priceValue - existingPriceValue) / existingPriceValue <= tolerance && price.recurring && price.recurring.interval === 'month' && price.currency === currency;
+            return mathPrice;
+          });
+
+          // Se encontrar um preço existente, reutilize esse preço
+          const priceToUse = matchingPrice ? matchingPrice.id : undefined;
+
+          let newPrice;
+
+          // Crie um novo preço para o produto no Stripe
+          if (priceToUse == undefined) {
+            newPrice = await stripeApi.prices.create({
+              product: produto,
+              unit_amount: Math.round(preco * 100 / parcelas), // Valor em centavos
+              currency: moeda,
+              recurring: {
+                interval: 'month',
+              }
+            });
+          }
+
+          // Criar um agendamento de assinatura
+          const subscriptionSchedule = await stripeApi.subscriptionSchedules.create({
+            phases: [
+              {
+                items: [
+                  {
+                    price: priceToUse || newPrice?.id || '',
+                    quantity: quantidade,
+                  }
+                ],
+                iterations: parcelas
+              },
+            ],
+            start_date: 'now',
+            end_behavior: 'cancel',
+          })
+
+          // Crie um objeto de pagamento com o novo preço
+          const paymentLink = await stripeApi.checkout.sessions.create({
+            payment_method_types: ['card'],
+            phone_number_collection: {
+              "enabled": true
+            },
+            billing_address_collection: "required",
+            subscription_schedule: subscriptionSchedule.id,
+            custom_fields: [
+              {
+                key: 'cnpj',
+                label: {
+                  type: "custom",
+                  custom: "CNPJ",
+                },
+                type: "numeric",
+              },
+              {
+                key: 'razaosocial',
+                label: {
+                  type: "custom",
+                  custom: "Razão Social",
+                },
+                type: "text",
+              },
+            ],
+            mode: 'subscription',
+            success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
+            cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
+          });
+    
+          if (paymentLink.url == null) {
+              paymentLink.url = '';
+          }
+
+          window.location.href = paymentLink.url;
+
+        // Caso não seja parcelado, o sistema cria um link de pagamento único
+        } else {
+
+          const matchingPrice = existingPrices.data.find(price => {
+            // Defina uma tolerância para comparação de preços
+            const tolerance = 0.00; // 0% de tolerância
+            const priceValue = preco * 100;
+            const existingPriceValue = price.unit_amount || 0;
+            const currency = moeda.toLowerCase();
+            return Math.abs(priceValue - existingPriceValue) / existingPriceValue <= tolerance && price.currency === currency;
+          });
+
+          // Se encontrar um preço existente, reutilize esse preço
+          const priceToUse = matchingPrice ? matchingPrice.id : undefined;
+
+          let newPrice;
+
+          // Crie um novo preço para o produto no Stripe
+          if (priceToUse == undefined) {
+            newPrice = await stripeApi.prices.create({
+              product: produto,
+              unit_amount: Math.round(preco * 100), // Valor em centavos
+              currency: moeda,
+            });
+          }
+          
+          // Crie um objeto de pagamento com o novo preço
+          const paymentLink = await stripeApi.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [{
+              price: priceToUse || newPrice?.id || '',
+              quantity: quantidade,
+            }],
+            phone_number_collection: {
+              "enabled": true
+            },
+            billing_address_collection: "required",
+            custom_fields: [
+              {
+                key: 'cnpj',
+                label: {
+                  type: "custom",
+                  custom: "CNPJ",
+                },
+                type: "numeric",
+              },
+              {
+                key: 'razaosocial',
+                label: {
+                  type: "custom",
+                  custom: "Razão Social",
+                },
+                type: "text",
+              },
+            ],
+            mode: 'payment',
+            success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
+            cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
+          });
+    
+          if (paymentLink.url == null) {
+              paymentLink.url = '';
+          }
+
+          window.location.href = paymentLink.url;
+        }
   
       } catch (error) {
         console.error('Erro ao gerar o PaymentLink:', error);
