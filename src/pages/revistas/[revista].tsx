@@ -285,7 +285,7 @@ const Product: React.FC<ProductProps> = ({ produtos }) => {
                                     </div>
                                 </div>
                                 <div className='flex flex-row justify-between'>
-                                  <div key={produto.id} className='mt-4'>
+                                  <div key={`quantity-${produto.id}`} className='mt-4'>
                                       <label htmlFor="quantity" className="text-white mr-1 ">
                                           Qtd.
                                       </label>

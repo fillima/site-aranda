@@ -2,6 +2,7 @@ import React from 'react';
 import Stripe from 'stripe';
 
 import stripeConfig from '../../../config/stripe';
+import Subscription from '../Subscription';
 
 const stripeApi = new Stripe(stripeConfig.secretKey, {
     apiVersion: '2022-11-15',
@@ -51,31 +52,19 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
             });
           }
 
-          // Criar um agendamento de assinatura
-          const subscriptionSchedule = await stripeApi.subscriptionSchedules.create({
-            phases: [
-              {
-                items: [
-                  {
-                    price: priceToUse || newPrice?.id || '',
-                    quantity: quantidade,
-                  }
-                ],
-                iterations: parcelas
-              },
-            ],
-            start_date: 'now',
-            end_behavior: 'cancel',
-          })
-
           // Crie um objeto de pagamento com o novo preço
           const paymentLink = await stripeApi.checkout.sessions.create({
             payment_method_types: ['card'],
             phone_number_collection: {
               "enabled": true
             },
+            line_items: [
+              {
+                price: priceToUse || newPrice?.id || '',
+                quantity: quantidade
+              }
+            ],
             billing_address_collection: "required",
-            subscription_schedule: subscriptionSchedule.id,
             custom_fields: [
               {
                 key: 'cnpj',
@@ -102,6 +91,17 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
           if (paymentLink.url == null) {
               paymentLink.url = '';
           }
+
+          const meses = 2592000 * parcelas;
+          const cancelAt = Math.floor(Date.now() / 1000) + meses;
+          let subscriptionId
+          if (typeof paymentLink.subscription === 'string') {
+            subscriptionId = paymentLink.subscription;
+          } else {
+            subscriptionId = '';
+          }
+
+          await Subscription(subscriptionId, cancelAt);
 
           window.location.href = paymentLink.url;
 
