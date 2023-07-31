@@ -48,7 +48,7 @@ async function updateSubscription(cancelAt: number, subscriptionId: string) {
     }
 }
 
-export default function paymentSuccess() {
+const PaymentSuccess = () => {
     const router = useRouter();
     const { session_id } = router.query;
     const [loading, setLoading] = useState(true);
@@ -94,3 +94,5 @@ export default function paymentSuccess() {
         </div>
     )
 }
+
+export default PaymentSuccess;
