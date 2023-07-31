@@ -72,7 +72,7 @@ const PaymentSuccess = () => {
         );
     }
 
-    const cancelAt = parseInt(checkoutData.data.metadata.cancelAt, 10) || 0;
+    const cancelAt = checkoutData.data.metadata?.cancelAt ? parseInt(checkoutData.data.metadata.cancelAt, 10) : 0;
     const subscriptionId = checkoutData.data.subscription || '';
 
     updateSubscription(cancelAt, subscriptionId.toString());
