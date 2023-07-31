@@ -9,6 +9,16 @@ const stripeApi = new Stripe(stripeConfig.secretKey, {
 
 export default async function Subscription(subscriptionID: string, cancelAt: number) {
     try {
+        // Certifique-se de que subscriptionID é uma string não vazia
+        if (!subscriptionID) {
+            throw new Error('ID da assinatura é obrigatório para atualização.');
+        }
+    
+        // Certifique-se de que cancelAt é um número válido (timestamp)
+        if (!Number.isInteger(cancelAt)) {
+            throw new Error('Timestamp inválido para cancelAt.');
+        }
+        
         const subscription = await stripeApi.subscriptions.update(
             subscriptionID,
             {

@@ -52,6 +52,9 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
             });
           }
 
+          const meses = 2592000 * parcelas;
+          const cancelAt = Math.floor(Date.now() / 1000) + meses;
+
           // Crie um objeto de pagamento com o novo preço
           const paymentLink = await stripeApi.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -64,6 +67,9 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
                 quantity: quantidade
               }
             ],
+            metadata: {
+              'cancelAt': cancelAt
+            },
             billing_address_collection: "required",
             custom_fields: [
               {
@@ -84,24 +90,13 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
               },
             ],
             mode: 'subscription',
-            success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
+            success_url: 'http://localhost:3000/payment_success?session_id={CHECKOUT_SESSION_ID}', // URL de sucesso após o pagamento
             cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
           });
     
           if (paymentLink.url == null) {
               paymentLink.url = '';
           }
-
-          const meses = 2592000 * parcelas;
-          const cancelAt = Math.floor(Date.now() / 1000) + meses;
-          let subscriptionId
-          if (typeof paymentLink.subscription === 'string') {
-            subscriptionId = paymentLink.subscription;
-          } else {
-            subscriptionId = '';
-          }
-
-          await Subscription(subscriptionId, cancelAt);
 
           window.location.href = paymentLink.url;
 
