@@ -6,13 +6,79 @@ import { useRouter } from 'next/router';
 import Session from 'stripe';
 import Link from "next/link";
 
+type StripeApiResponse<Session> = {
+    object: 'list' | 'single';
+    data: Session;
+}
+
+const stripeApi = new Stripe(stripeConfig.secretKey, {
+    apiVersion: '2022-11-15',
+});
+
 const styles = {
     background: {
         backgroundColor: '#0a4271'
     }
 }
 
+async function fetchCheckoutData(sessionId: string): Promise<StripeApiResponse<Stripe.Checkout.Session>> {
+    try {
+        const checkout = await stripeApi.checkout.sessions.retrieve(sessionId);
+        console.log(checkout);
+
+        return {
+            object: 'single',
+            data: checkout,
+        };
+    } catch (error) {
+        console.error('Erro ao buscar checkout:', error);
+        throw error;
+    }
+}
+
+async function updateSubscription(cancelAt: number, subscriptionId: string) {
+    try {
+        const subscription = await stripeApi.subscriptions.update(
+            subscriptionId,
+            {
+                proration_behavior: 'none',
+                cancel_at: cancelAt
+            }
+        )
+    } catch (error) {
+        console.error('Erro ao atualizar assinatura:', error);
+    }
+}
+
 const PaymentSuccess = () => {
+    const router = useRouter();
+    const { session_id } = router.query;
+    const [loading, setLoading] = useState(true);
+    const [checkoutData, setCheckoutData] = useState<StripeApiResponse<Stripe.Checkout.Session>>();
+
+    useEffect(() => {
+        if (session_id) {
+            fetchCheckoutData(session_id.toString())
+                .then((data) => {
+                    setCheckoutData(data);
+                    setLoading(false);
+                });
+        }
+    }, [session_id]);
+
+    if (loading || !checkoutData) {
+        return (
+            <div>
+                <h1>Carregando...</h1>
+            </div>
+        );
+    }
+
+    const cancelAt = checkoutData.data.metadata?.cancelAt ? parseInt(checkoutData.data.metadata.cancelAt, 10) : 0;
+    const subscriptionId = checkoutData.data.subscription || '';
+
+    updateSubscription(cancelAt, subscriptionId.toString());
+
     return (
         <div className="h-screen mt-20" style={styles.background}>
             <div className="bg-white p-6  md:mx-auto">

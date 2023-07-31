@@ -2,7 +2,6 @@ import React from 'react';
 import Stripe from 'stripe';
 
 import stripeConfig from '../../../config/stripe';
-import Subscription from '../Subscription';
 
 const stripeApi = new Stripe(stripeConfig.secretKey, {
     apiVersion: '2022-11-15',
@@ -111,7 +110,7 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
             subscription_data: {
               billing_cycle_anchor: actualData,
             },
-            success_url: 'http://localhost:3000/payment_success?session_id={CHECKOUT_SESSION_ID}', // URL de sucesso após o pagamento
+            success_url: 'https://publicidadearanda.com.br/payment_success_subscription?session_id={CHECKOUT_SESSION_ID}', // URL de sucesso após o pagamento
             cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
           });
     
@@ -177,7 +176,7 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
               },
             ],
             mode: 'payment',
-            success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
+            success_url: 'https://publicidadearanda.com.br/payment_success', // URL de sucesso após o pagamento
             cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
           });
     
