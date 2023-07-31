@@ -2,7 +2,6 @@ import React from 'react';
 import Stripe from 'stripe';
 
 import stripeConfig from '../../../config/stripe';
-import Subscription from '../Subscription';
 
 const stripeApi = new Stripe(stripeConfig.secretKey, {
     apiVersion: '2022-11-15',
@@ -14,6 +13,23 @@ interface Props {
     moeda: string,
     produto: string,
     parcelas: number,
+}
+
+function addMonths(date: Date, parcelas: number) {
+  // Obtém o dia atual do mês
+  const day = date.getDate();
+  
+  // Cria uma nova data baseada na data fornecida, adicionando um mês
+  const nextMonthDate = new Date(date);
+  nextMonthDate.setMonth(nextMonthDate.getMonth() + parcelas);
+  
+  // Se o dia atual for maior do que o último dia do próximo mês, ajusta para o último dia do próximo mês
+  if (day > nextMonthDate.getDate()) {
+    nextMonthDate.setDate(0);
+  }
+  
+  const timestamp = Math.floor(nextMonthDate.getTime() / 1000);
+  return timestamp;
 }
 
 export default async function PaymentLink({quantidade, preco, moeda, produto, parcelas}: Props) {
@@ -52,6 +68,10 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
             });
           }
 
+          const today = new Date();
+          const cancelAt = addMonths(today, parcelas);
+          const actualData = Math.floor(Date.now() / 1000);
+
           // Crie um objeto de pagamento com o novo preço
           const paymentLink = await stripeApi.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -64,6 +84,9 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
                 quantity: quantidade
               }
             ],
+            metadata: {
+              'cancelAt': cancelAt
+            },
             billing_address_collection: "required",
             custom_fields: [
               {
@@ -84,24 +107,16 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
               },
             ],
             mode: 'subscription',
-            success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
+            subscription_data: {
+              billing_cycle_anchor: actualData,
+            },
+            success_url: 'https://publicidadearanda.com.br/payment_success_subscription?session_id={CHECKOUT_SESSION_ID}', // URL de sucesso após o pagamento
             cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
           });
     
           if (paymentLink.url == null) {
               paymentLink.url = '';
           }
-
-          const meses = 2592000 * parcelas;
-          const cancelAt = Math.floor(Date.now() / 1000) + meses;
-          let subscriptionId
-          if (typeof paymentLink.subscription === 'string') {
-            subscriptionId = paymentLink.subscription;
-          } else {
-            subscriptionId = '';
-          }
-
-          await Subscription(subscriptionId, cancelAt);
 
           window.location.href = paymentLink.url;
 
@@ -161,7 +176,7 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
               },
             ],
             mode: 'payment',
-            success_url: 'https://publicidadearanda.com.br', // URL de sucesso após o pagamento
+            success_url: 'https://publicidadearanda.com.br/payment_success', // URL de sucesso após o pagamento
             cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
           });
     
