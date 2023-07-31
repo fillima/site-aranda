@@ -16,6 +16,23 @@ interface Props {
     parcelas: number,
 }
 
+function addMonths(date: Date, parcelas: number) {
+  // Obtém o dia atual do mês
+  const day = date.getDate();
+  
+  // Cria uma nova data baseada na data fornecida, adicionando um mês
+  const nextMonthDate = new Date(date);
+  nextMonthDate.setMonth(nextMonthDate.getMonth() + parcelas);
+  
+  // Se o dia atual for maior do que o último dia do próximo mês, ajusta para o último dia do próximo mês
+  if (day > nextMonthDate.getDate()) {
+    nextMonthDate.setDate(0);
+  }
+  
+  const timestamp = Math.floor(nextMonthDate.getTime() / 1000);
+  return timestamp;
+}
+
 export default async function PaymentLink({quantidade, preco, moeda, produto, parcelas}: Props) {
     try {
         const existingPrices = await stripeApi.prices.list({
@@ -52,8 +69,9 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
             });
           }
 
-          const meses = 2592000 * parcelas;
-          const cancelAt = Math.floor(Date.now() / 1000) + meses;
+          const today = new Date();
+          const cancelAt = addMonths(today, parcelas);
+          const actualData = Math.floor(Date.now() / 1000);
 
           // Crie um objeto de pagamento com o novo preço
           const paymentLink = await stripeApi.checkout.sessions.create({
@@ -90,6 +108,9 @@ export default async function PaymentLink({quantidade, preco, moeda, produto, pa
               },
             ],
             mode: 'subscription',
+            subscription_data: {
+              billing_cycle_anchor: actualData,
+            },
             success_url: 'http://localhost:3000/payment_success?session_id={CHECKOUT_SESSION_ID}', // URL de sucesso após o pagamento
             cancel_url: 'https://publicidadearanda.com.br', // URL caso o usuário cancele o pagamento
           });
